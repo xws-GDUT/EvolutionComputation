@@ -14,7 +14,6 @@ public class GeneticEvolver extends Evolver {
      * @create: 2020-11-07 23:44
      **/
 
-    private double rate_mutate;
 
     public GeneticEvolver() {
     }
@@ -23,7 +22,7 @@ public class GeneticEvolver extends Evolver {
     public List<Individual> mutate(List<Individual> pop) {
         for (int i = 0; i < super.getPOPSIZE(); i++) {
             double p = Math.random();
-            if (p < rate_mutate) {
+            if (p < super.getRate_mutate()) {
                 List<Double> solution = new ArrayList<Double>();
                 for (int j = 0; j < super.getNvars(); j++) {
                     solution.add(super.getLowerBound() + Math.random() * (super.getUpperBound() - super.getLowerBound()));

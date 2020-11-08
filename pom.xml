@@ -46,7 +46,7 @@
                     <archive>
                         <manifest>
                             <!--这里要替换成jar包main方法所在类 -->
-                            <mainClass>controller.Main</mainClass>
+                            <mainClass>controller.DifferentialEvolution</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>.</Class-Path>
