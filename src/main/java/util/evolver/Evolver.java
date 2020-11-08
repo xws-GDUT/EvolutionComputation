@@ -65,8 +65,6 @@ public abstract class Evolver implements Evolvable{
         for (int i = 0; i < POPSIZE; i++) {
             Individual individual = new Individual();
             List<Double> solution= new ArrayList<Double>();
-
-
             for(int k = 0; k< Nvars; k++){
                 solution.add(lowerBound + Math.random() * ( upperBound- lowerBound));
             }
