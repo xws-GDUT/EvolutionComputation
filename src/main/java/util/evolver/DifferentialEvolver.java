@@ -1,8 +1,6 @@
 package util.evolver;
 
-import Paraments.Parament;
 import pojo.Individual;
-import util.evaluator.Evaluator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,46 +24,11 @@ public class DifferentialEvolver extends Evolver {
     public DifferentialEvolver() {
     }
 
-    public DifferentialEvolver(Double upperBound, Double lowerBound, String mutateType, Integer differentialVectorNo, String crossoverType) {
-        super(upperBound, lowerBound);
+    public DifferentialEvolver(String mutateType, Integer differentialVectorNo, String crossoverType) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
     }
-
-    //    @Override
-//    public void initPop(List<Individual> pop) {
-//        for (int i = 0; i < Parament.POPSIZE; i++) {
-//            Individual individual = new Individual();
-//            List<Double> solution= new ArrayList<Double>();
-//            for(int k=0;k<Parament.Nvars;k++){
-//                solution.add(lowerBound + Math.random() * ( upperBound- lowerBound));
-//            }
-//            individual.setSolution(solution);
-//            pop.add(individual);
-//        }
-//    }
-//    @Override
-//    public Individual getBestIndividual(List<Individual> pop) {
-//        Individual bestIndividual = null;
-//        try {
-//            bestIndividual= (Individual) pop.get(0).clone();
-//            for(int j=1;j<pop.size();j++){
-//                if(pop.get(j).getFitness()<bestIndividual.getFitness()){
-//                    bestIndividual= (Individual) pop.get(j).clone();
-//                }
-//            }
-//        } catch (CloneNotSupportedException e) {
-//            e.printStackTrace();
-//        }
-//        return bestIndividual;
-//    }
-//    @Override
-//    public void evaluate(List<Individual> pop, Evaluator evaluator) {
-//        for (int i = 0; i < pop.size(); i++) {
-//            evaluator.evaluate(pop.get(i));
-//        }
-//    }
 
     @Override
     public List<Individual> mutate(List<Individual> pop) {
@@ -84,8 +47,8 @@ public class DifferentialEvolver extends Evolver {
                             indexes.add(index);
                         }
                     }
-                    for (int j = 0; j < Parament.Nvars; j++) {
-                        double value= pop.get(indexes.get(1)).getSolution().get(j) + Parament.F * (pop.get(indexes.get(2)).getSolution().get(j) - pop.get(indexes.get(3)).getSolution().get(j));
+                    for (int j = 0; j < super.getNvars(); j++) {
+                        double value= pop.get(indexes.get(1)).getSolution().get(j) + super.getF() * (pop.get(indexes.get(2)).getSolution().get(j) - pop.get(indexes.get(3)).getSolution().get(j));
                         value=handleOutOfBoundary(value,super.getLowerBound(),super.getUpperBound());
                         solution.add(value);
                     }
@@ -105,8 +68,8 @@ public class DifferentialEvolver extends Evolver {
                             indexes.add(index);
                         }
                     }
-                    for (int j = 0; j < Parament.Nvars; j++) {
-                        double value=pop.get(indexes.get(1)).getSolution().get(j) + Parament.F * (pop.get(indexes.get(2)).getSolution().get(j)+pop.get(indexes.get(3)).getSolution().get(j) - pop.get(indexes.get(4)).getSolution().get(j)- pop.get(indexes.get(5)).getSolution().get(j));
+                    for (int j = 0; j < super.getNvars(); j++) {
+                        double value=pop.get(indexes.get(1)).getSolution().get(j) + super.getF() * (pop.get(indexes.get(2)).getSolution().get(j)+pop.get(indexes.get(3)).getSolution().get(j) - pop.get(indexes.get(4)).getSolution().get(j)- pop.get(indexes.get(5)).getSolution().get(j));
                         value=handleOutOfBoundary(value,super.getLowerBound(),super.getUpperBound());
                         solution.add(value);
                     }
@@ -131,8 +94,8 @@ public class DifferentialEvolver extends Evolver {
                             indexes.add(index);
                         }
                     }
-                    for (int j = 0; j < Parament.Nvars; j++) {
-                        double value = bestIndividual.getSolution().get(j) + Parament.F * (pop.get(indexes.get(1)).getSolution().get(j) - pop.get(indexes.get(2)).getSolution().get(j));
+                    for (int j = 0; j < super.getNvars(); j++) {
+                        double value = bestIndividual.getSolution().get(j) + super.getF() * (pop.get(indexes.get(1)).getSolution().get(j) - pop.get(indexes.get(2)).getSolution().get(j));
                         value=handleOutOfBoundary(value,super.getLowerBound(),super.getUpperBound());
                         solution.add(value);
                     }
@@ -151,8 +114,8 @@ public class DifferentialEvolver extends Evolver {
                             indexes.add(index);
                         }
                     }
-                    for (int j = 0; j < Parament.Nvars; j++) {
-                        double value =bestIndividual.getSolution().get(j) + Parament.F * (pop.get(indexes.get(1)).getSolution().get(j)+pop.get(indexes.get(2)).getSolution().get(j) - pop.get(indexes.get(3)).getSolution().get(j)- pop.get(indexes.get(4)).getSolution().get(j));
+                    for (int j = 0; j < super.getNvars(); j++) {
+                        double value =bestIndividual.getSolution().get(j) + super.getF() * (pop.get(indexes.get(1)).getSolution().get(j)+pop.get(indexes.get(2)).getSolution().get(j) - pop.get(indexes.get(3)).getSolution().get(j)- pop.get(indexes.get(4)).getSolution().get(j));
                         value=handleOutOfBoundary(value,super.getLowerBound(),super.getUpperBound());
                         solution.add(value);
                     }
@@ -176,8 +139,8 @@ public class DifferentialEvolver extends Evolver {
                         indexes.add(index);
                     }
                 }
-                for (int j = 0; j < Parament.Nvars; j++) {
-                    double value = pop.get(i).getSolution().get(j) +Parament.lambda*(bestIndividual.getSolution().get(j)-pop.get(i).getSolution().get(j))+ Parament.F * (pop.get(indexes.get(1)).getSolution().get(j) - pop.get(indexes.get(2)).getSolution().get(j));
+                for (int j = 0; j < super.getNvars(); j++) {
+                    double value = pop.get(i).getSolution().get(j) + super.getLambda()*(bestIndividual.getSolution().get(j)-pop.get(i).getSolution().get(j))+ super.getF() * (pop.get(indexes.get(1)).getSolution().get(j) - pop.get(indexes.get(2)).getSolution().get(j));
                     value=handleOutOfBoundary(value,super.getLowerBound(),super.getUpperBound());
                     solution.add(value);
                 }
@@ -217,19 +180,19 @@ public class DifferentialEvolver extends Evolver {
             List<Individual> tmpPop=pops[1];
             if("bin".equals(crossoverType)){//二项交叉
                 for(int i=0;i<tmpPop.size();i++){
-                    int popisitonOfCrossover = new Random().nextInt(Parament.Nvars);
+                    int popisitonOfCrossover = new Random().nextInt(super.getNvars());
                     Individual tmpIndividual = tmpPop.get(i);
                     List<Double> tmpSolution = tmpIndividual.getSolution();
-                    for(int j=0;j<Parament.Nvars;j++){
+                    for(int j = 0; j< super.getNvars(); j++){
                         double p = Math.random();
-                        if( p > Parament.rate_crossover && popisitonOfCrossover != j){
+                        if( p > super.getRate_crossover() && popisitonOfCrossover != j){
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
                         }
                     }
                 }
             }else if("exp".equals(crossoverType)){//指数交叉
                 for(int i=0;i<tmpPop.size();i++){
-                    int popisitonOfCrossover = new Random().nextInt(Parament.Nvars);
+                    int popisitonOfCrossover = new Random().nextInt(super.getNvars());
                     Individual tmpIndividual = tmpPop.get(i);
                     List<Double> tmpSolution = tmpIndividual.getSolution();
                     for(int j=0;j<=popisitonOfCrossover;j++){
@@ -237,13 +200,13 @@ public class DifferentialEvolver extends Evolver {
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
                         }
                     }
-                    for(int j=popisitonOfCrossover;j<Parament.Nvars;j++) {
+                    for(int j = popisitonOfCrossover; j< super.getNvars(); j++) {
                         double p = Math.random();
-                        if (p <= Parament.rate_crossover) {
+                        if (p <= super.getRate_crossover()) {
                             continue;
                         }
 
-                        while(j<Parament.Nvars){
+                        while(j< super.getNvars()){
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
                             j++;
                         }
@@ -255,4 +218,30 @@ public class DifferentialEvolver extends Evolver {
             }
         }
     }
+
+    public String getMutateType() {
+        return mutateType;
+    }
+
+    public void setMutateType(String mutateType) {
+        this.mutateType = mutateType;
+    }
+
+    public Integer getDifferentialVectorNo() {
+        return differentialVectorNo;
+    }
+
+    public void setDifferentialVectorNo(Integer differentialVectorNo) {
+        this.differentialVectorNo = differentialVectorNo;
+    }
+
+    public String getCrossoverType() {
+        return crossoverType;
+    }
+
+    public void setCrossoverType(String crossoverType) {
+        this.crossoverType = crossoverType;
+    }
+
+
 }

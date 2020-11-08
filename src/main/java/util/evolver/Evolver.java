@@ -1,6 +1,5 @@
 package util.evolver;
 
-import Paraments.Parament;
 import pojo.Individual;
 import util.evaluator.Evaluator;
 
@@ -17,6 +16,13 @@ public abstract class Evolver implements Evolvable{
      *
      * @create: 2020-11-07 23:47
      **/
+    private int POPSIZE;            //种群规模
+    private int Nvars;              //个体维度
+    private double rate_crossover;  //交叉概率
+    private double rate_mutate;     //变异概率
+    private double F;              //缩放因子
+    private double lambda;
+
     //取值范围
     private Double upperBound;
     private Double lowerBound;
@@ -24,7 +30,13 @@ public abstract class Evolver implements Evolvable{
     public Evolver() {
     }
 
-    public Evolver(Double upperBound, Double lowerBound) {
+    public Evolver(int POPSIZE, int nvars, double rate_crossover, double rate_mutate, double f, double lambda, Double upperBound, Double lowerBound) {
+        this.POPSIZE = POPSIZE;
+        Nvars = nvars;
+        this.rate_crossover = rate_crossover;
+        this.rate_mutate = rate_mutate;
+        F = f;
+        this.lambda = lambda;
         this.upperBound = upperBound;
         this.lowerBound = lowerBound;
     }
@@ -47,10 +59,15 @@ public abstract class Evolver implements Evolvable{
 
     @Override
     public void initPop(List<Individual> pop) {
-        for (int i = 0; i < Parament.POPSIZE; i++) {
+        if(pop==null){
+            pop=new ArrayList<>();
+        }
+        for (int i = 0; i < POPSIZE; i++) {
             Individual individual = new Individual();
             List<Double> solution= new ArrayList<Double>();
-            for(int k=0;k<Parament.Nvars;k++){
+
+
+            for(int k = 0; k< Nvars; k++){
                 solution.add(lowerBound + Math.random() * ( upperBound- lowerBound));
             }
             individual.setSolution(solution);
@@ -110,4 +127,51 @@ public abstract class Evolver implements Evolvable{
     }
 
 
+    public int getPOPSIZE() {
+        return POPSIZE;
+    }
+
+    public void setPOPSIZE(int POPSIZE) {
+        this.POPSIZE = POPSIZE;
+    }
+
+    public int getNvars() {
+        return Nvars;
+    }
+
+    public void setNvars(int nvars) {
+        Nvars = nvars;
+    }
+
+    public double getRate_crossover() {
+        return rate_crossover;
+    }
+
+    public void setRate_crossover(double rate_crossover) {
+        this.rate_crossover = rate_crossover;
+    }
+
+    public double getF() {
+        return F;
+    }
+
+    public void setF(double f) {
+        F = f;
+    }
+
+    public double getLambda() {
+        return lambda;
+    }
+
+    public void setLambda(double lambda) {
+        this.lambda = lambda;
+    }
+
+    public double getRate_mutate() {
+        return rate_mutate;
+    }
+
+    public void setRate_mutate(double rate_mutate) {
+        this.rate_mutate = rate_mutate;
+    }
 }
