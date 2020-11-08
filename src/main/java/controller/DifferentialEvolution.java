@@ -11,8 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Strategy implements Runnable {
+public class DifferentialEvolution implements Runnable {
     /**
      * @program: MultiThread
      * @description: 代理差分演化算法对不同策略的运行
@@ -26,17 +29,16 @@ public class Strategy implements Runnable {
     private Integer runningCount;
     private Integer evolutionCount;
 
-    private Double upperBound;
-    private Double lowerBound;
-    public Strategy() {
+
+    public DifferentialEvolution() {
     }
-    public Strategy(String mutateType, int differentialVectorNo, String crossoverType) {
+    public DifferentialEvolution(String mutateType, int differentialVectorNo, String crossoverType) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
     }
 
-    public Strategy(String mutateType, int differentialVectorNo, String crossoverType, int runningCount, int evolutionCount) {
+    public DifferentialEvolution(String mutateType, int differentialVectorNo, String crossoverType, int runningCount, int evolutionCount) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
@@ -74,10 +76,11 @@ public class Strategy implements Runnable {
             }
 
             //获取符合当前评价函数的取值范围
+            Double[] range = new Double[2];
             try {
-                String[] range = FileUtils.readFileToString(new File("function/" + function[i] + ".txt"), "UTF-8").split("\t");
-                lowerBound=new Double(range[0]);
-                upperBound=new Double(range[1]);
+                String[] str_range = FileUtils.readFileToString(new File("function/" + function[i] + ".txt"), "UTF-8").split("\t");
+                range[0]=new Double(str_range[0]);
+                range[1]=new Double(str_range[1]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,8 +94,16 @@ public class Strategy implements Runnable {
             for (int j = 0; j < runningCount; j++) {
                 List<Individual> pop = new ArrayList<>();
                 List<Individual> tmpPop=null;
-//                Evolver DE= new DifferentialEvolver(mutateType,differentialVectorNo,crossoverType,upperBound,lowerBound);
-               Evolver DE = new DifferentialEvolver(upperBound,lowerBound,mutateType,differentialVectorNo,crossoverType);
+                //配置进化器DE------------------------
+               Evolver DE = new DifferentialEvolver(mutateType,differentialVectorNo,crossoverType);
+               DE.setPOPSIZE(100);
+               DE.setNvars(30);
+               DE.setF(0.5);
+               DE.setLambda(0.5);
+               DE.setRate_crossover(0.9);
+               DE.setLowerBound(range[0]);
+               DE.setUpperBound(range[1]);
+
                 //----------差分演化------------
                 DE.initPop(pop);
                 for (int k = 0; k < evolutionCount; k++) {
@@ -107,6 +118,7 @@ public class Strategy implements Runnable {
                     DE.select(pop, tmpPop);
                 }
                 //----------------------------
+
                 bestIndividual = DE.getBestIndividual(pop);
                 System.out.println(Thread.currentThread().getName() + "第" + (j + 1) + "次最优个体的适应度相对于最优值的偏差：" + bestIndividual.getFitness());
                 sum += bestIndividual.getFitness();
@@ -127,5 +139,40 @@ public class Strategy implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println("设置线程池的大小：");
+        Scanner scanner = new Scanner(System.in);
+        int ThreadAmount= scanner.nextInt();
+        System.out.println("设置每种策略的独立运行次数：");
+        int runningCount = scanner.nextInt();
+        System.out.println("设置差分演化算法的演化次数：");
+        int evolutionCount = scanner.nextInt();
+        ExecutorService pool = Executors.newFixedThreadPool(ThreadAmount);
+//      每个线程代表一种策略线程测试
+        DifferentialEvolution rand_1_bin = new DifferentialEvolution("rand",1,"bin",runningCount,evolutionCount);
+        DifferentialEvolution rand_1_exp = new DifferentialEvolution("rand",1,"exp",runningCount,evolutionCount);
+        DifferentialEvolution best_1_bin = new DifferentialEvolution("best",1,"bin",runningCount,evolutionCount);
+        DifferentialEvolution best_1_exp = new DifferentialEvolution("best",1,"exp",runningCount,evolutionCount);
+        DifferentialEvolution rand_2_bin = new DifferentialEvolution("rand",2,"bin",runningCount,evolutionCount);
+        DifferentialEvolution rand_2_exp = new DifferentialEvolution("rand",2,"exp",runningCount,evolutionCount);
+        DifferentialEvolution best_2_bin = new DifferentialEvolution("best",2,"bin",runningCount,evolutionCount);
+        DifferentialEvolution best_2_exp = new DifferentialEvolution("best",2,"exp",runningCount,evolutionCount);
+        DifferentialEvolution randTobest_1_bin = new DifferentialEvolution("randToBest",1,"bin",runningCount,evolutionCount);
+        DifferentialEvolution randTobest_1_exp = new DifferentialEvolution("randToBest",1,"exp",runningCount,evolutionCount);
+//        new Thread(rand_1_bin).start();
+        pool.execute(rand_1_bin);
+        pool.execute(rand_1_exp);
+        pool.execute(best_1_bin);
+        pool.execute(best_1_exp);
+        pool.execute(rand_2_bin);
+        pool.execute(rand_2_exp);
+        pool.execute(best_2_bin);
+        pool.execute(best_2_exp);
+        pool.execute(randTobest_1_bin);
+        pool.execute(randTobest_1_exp);
+        pool.shutdown();
     }
 }

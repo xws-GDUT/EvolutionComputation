@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>EC</artifactId>
+    <artifactId>EvolutionComputation</artifactId>
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
@@ -66,10 +66,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
-
     </build>
     <dependencies>
         <dependency>
