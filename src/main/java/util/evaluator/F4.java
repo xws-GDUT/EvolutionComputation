@@ -8,6 +8,13 @@ import java.util.List;
  * Created by wansenxu@163.com on 2020/11/5
  */
 public class F4 implements Evaluator<Individual> {
+    private static F4 f4 = new F4();
+    private F4(){
+
+    }
+    public static F4 getF4(){
+        return f4;
+    }
     private final double bestKnown= 0;
 
     @Override

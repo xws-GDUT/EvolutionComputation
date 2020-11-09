@@ -7,31 +7,31 @@ public class EvaluatorFactory {
     public static Evaluator getEvaluator(String function){
         Evaluator evaluator=null;
         if("f1".equals(function)){
-            evaluator = new F1();
+            evaluator = F1.getF1();
         }else if("f2".equals(function)){
-            evaluator = new F2();
+            evaluator = F2.getF2();
         }else if("f3".equals(function)){
-            evaluator = new F3();
+            evaluator = F3.getF3();
         }else if("f4".equals(function)){
-            evaluator = new F4();
+            evaluator = F4.getF4();
         }else if("f5".equals(function)){
-            evaluator = new F5();
+            evaluator = F5.getF5();
         }else if("f6".equals(function)){
-            evaluator = new F6();
+            evaluator = F6.getF6();
         }else if("f7".equals(function)){
-            evaluator = new F7();
+            evaluator = F7.getF7();
         }else if("f8".equals(function)){
-            evaluator = new F8();
+            evaluator = F8.getF8();
         }else if("f9".equals(function)){
-            evaluator = new F9();
+            evaluator = F9.getF9();
         }else if("f10".equals(function)){
-            evaluator = new F10();
+            evaluator = F10.getF10();
         }else if("f11".equals(function)){
-            evaluator = new F11();
+            evaluator = F11.getF11();
         }else if("f12".equals(function)){
-            evaluator = new F12();
+            evaluator = F12.getF12();
         }else if("f13".equals(function)){
-            evaluator = new F13();
+            evaluator = F13.getF13();
         }
         return evaluator;
     }

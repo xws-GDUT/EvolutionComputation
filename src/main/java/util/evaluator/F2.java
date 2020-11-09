@@ -8,8 +8,14 @@ import java.util.List;
  * Created by wansenxu@163.com on 2020/11/5
  */
 public class F2 implements Evaluator<Individual> {
-    private final double bestKnown= 0;
+    private static F2 f2 = new F2();
+    private F2(){
 
+    }
+    public static F2 getF2(){
+        return f2;
+    }
+    private final double bestKnown= 0;
     @Override
     public void evaluate(Individual individual) {
         double sum_plus=0;
