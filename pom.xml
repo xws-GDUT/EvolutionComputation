@@ -9,14 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>6</source>
-                    <target>6</target>
-                </configuration>
-            </plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -25,21 +18,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <!-- <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-jar-plugin</artifactId>
-                 <configuration>
-                     <archive>
-                         <manifest>
-                             <addClasspath>true</addClasspath>
-                             <useUniqueVersions>false</useUniqueVersions>
-                             <classpathPrefix>lib/</classpathPrefix>
- &lt;!&ndash;                            <mainClass>cn.mymaven.test.TestMain</mainClass>&ndash;&gt;
-                             <mainClass>controller.Main</mainClass>
-                         </manifest>
-                     </archive>
-                 </configuration>
-             </plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
