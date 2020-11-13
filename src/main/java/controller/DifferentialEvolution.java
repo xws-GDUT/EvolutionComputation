@@ -1,7 +1,6 @@
 package controller;
 
 import org.apache.commons.io.FileUtils;
-import pojo.Data;
 import pojo.Individual;
 import util.evaluator.Evaluator;
 import util.evaluator.EvaluatorFactory;
@@ -34,7 +33,7 @@ public class DifferentialEvolution implements Runnable {
     private CountDownLatch countDownLatch;
 
     //test segment ----------------------------
-    private List<Data> datas = new ArrayList<>();
+//    private List<Data> datas = new ArrayList<>();
 
     //-----------------------------------------
 
