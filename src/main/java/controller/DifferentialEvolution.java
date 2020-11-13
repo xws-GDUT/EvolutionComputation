@@ -1,6 +1,7 @@
 package controller;
 
 import org.apache.commons.io.FileUtils;
+import pojo.Data;
 import pojo.Individual;
 import util.evaluator.Evaluator;
 import util.evaluator.EvaluatorFactory;
@@ -32,6 +33,11 @@ public class DifferentialEvolution implements Runnable {
 
     private CountDownLatch countDownLatch;
 
+    //test segment ----------------------------
+    private List<Data> datas = new ArrayList<>();
+
+    //-----------------------------------------
+
 
     public DifferentialEvolution() {
     }
@@ -58,6 +64,7 @@ public class DifferentialEvolution implements Runnable {
         String[] function = {"f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13"};
         Individual bestIndividual = null;
         try {
+
             FileUtils.write(new File("fitness/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), "函数\t" + mutateType + "/" + differentialVectorNo + "/" + crossoverType + "\n", "UTF-8");
             FileUtils.write(new File("countSuccess/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), "函数" + "\t" + mutateType + "/" + differentialVectorNo + "/" + crossoverType + "\n", "UTF-8");
             for (int i = 0; i < function.length; i++) {

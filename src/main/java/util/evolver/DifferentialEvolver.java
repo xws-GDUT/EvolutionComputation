@@ -180,10 +180,10 @@ public class DifferentialEvolver extends Evolver {
             List<Individual> tmpPop=pops[1];
             if("bin".equals(crossoverType)){//二项交叉
                 for(int i=0;i<tmpPop.size();i++){
-                    int popisitonOfCrossover = new Random().nextInt(super.getNvars());
+                    int popisitonOfCrossover = new Random().nextInt(pop.get(0).getSolution().size());
                     Individual tmpIndividual = tmpPop.get(i);
                     List<Double> tmpSolution = tmpIndividual.getSolution();
-                    for(int j = 0; j< super.getNvars(); j++){
+                    for(int j = 0; j< pop.get(0).getSolution().size(); j++){
                         double p = Math.random();
                         if( p > super.getRate_crossover() && popisitonOfCrossover != j){
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
@@ -192,7 +192,7 @@ public class DifferentialEvolver extends Evolver {
                 }
             }else if("exp".equals(crossoverType)){//指数交叉
                 for(int i=0;i<tmpPop.size();i++){
-                    int popisitonOfCrossover = new Random().nextInt(super.getNvars());
+                    int popisitonOfCrossover = new Random().nextInt(pop.get(0).getSolution().size());
                     Individual tmpIndividual = tmpPop.get(i);
                     List<Double> tmpSolution = tmpIndividual.getSolution();
                     for(int j=0;j<=popisitonOfCrossover;j++){
@@ -200,13 +200,13 @@ public class DifferentialEvolver extends Evolver {
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
                         }
                     }
-                    for(int j = popisitonOfCrossover; j< super.getNvars(); j++) {
+                    for(int j = popisitonOfCrossover+1; j< pop.get(0).getSolution().size(); j++) {
                         double p = Math.random();
                         if (p <= super.getRate_crossover()) {
                             continue;
                         }
 
-                        while(j< super.getNvars()){
+                        while(j<  pop.get(0).getSolution().size()){
                             tmpSolution.set(j,pop.get(i).getSolution().get(j));
                             j++;
                         }
