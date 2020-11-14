@@ -82,12 +82,14 @@ public abstract class Evolver implements Evolvable{
     public Individual getBestIndividual(List<Individual> pop) {
         Individual bestIndividual = null;
         try {
-            bestIndividual= (Individual) pop.get(0).clone();
-            for(int j=1;j<pop.size();j++){
-                if(pop.get(j).getFitness()<bestIndividual.getFitness()){
-                    bestIndividual= (Individual) pop.get(j).clone();
+            Double minFitness = pop.get(0).getFitness();
+            int k=0;
+            for(int i=1;i<pop.size();i++){
+                if(pop.get(i).getFitness()<minFitness){
+                    k=i;
                 }
             }
+            bestIndividual= (Individual) pop.get(k).clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
