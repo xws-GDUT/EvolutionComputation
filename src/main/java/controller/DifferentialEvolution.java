@@ -4,8 +4,10 @@ import org.apache.commons.io.FileUtils;
 import pojo.Individual;
 import util.evaluator.Evaluator;
 import util.evaluator.EvaluatorFactory;
+import util.evolver.CrossoverType;
 import util.evolver.DifferentialEvolver;
 import util.evolver.Evolver;
+import util.evolver.MutateType;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +25,9 @@ public class DifferentialEvolution implements Runnable {
      * @author: 许万森
      * @create: 2020-10-21 21:19
      **/
-    private String mutateType;
+    private MutateType mutateType;
     private Integer differentialVectorNo;
-    private String crossoverType;
+    private CrossoverType crossoverType;
 
     private Integer runningCount;
     private Integer evolutionCount;
@@ -41,13 +43,13 @@ public class DifferentialEvolution implements Runnable {
     public DifferentialEvolution() {
     }
 
-    public DifferentialEvolution(String mutateType, int differentialVectorNo, String crossoverType) {
+    public DifferentialEvolution(MutateType mutateType, int differentialVectorNo, CrossoverType crossoverType) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
     }
 
-    public DifferentialEvolution(String mutateType, int differentialVectorNo, String crossoverType, int runningCount, int evolutionCount, CountDownLatch countDownLatch) {
+    public DifferentialEvolution(MutateType mutateType, int differentialVectorNo, CrossoverType crossoverType, int runningCount, int evolutionCount, CountDownLatch countDownLatch) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
@@ -161,16 +163,16 @@ public class DifferentialEvolution implements Runnable {
 
         ExecutorService pool = Executors.newFixedThreadPool(ThreadAmount);
 //      每个线程代表一种策略线程测试
-        DifferentialEvolution rand_1_bin = new DifferentialEvolution("rand", 1, "bin", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution rand_1_exp = new DifferentialEvolution("rand", 1, "exp", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution best_1_bin = new DifferentialEvolution("best", 1, "bin", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution best_1_exp = new DifferentialEvolution("best", 1, "exp", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution rand_2_bin = new DifferentialEvolution("rand", 2, "bin", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution rand_2_exp = new DifferentialEvolution("rand", 2, "exp", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution best_2_bin = new DifferentialEvolution("best", 2, "bin", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution best_2_exp = new DifferentialEvolution("best", 2, "exp", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution randTobest_1_bin = new DifferentialEvolution("randToBest", 1, "bin", runningCount, evolutionCount, countDownLatch);
-        DifferentialEvolution randTobest_1_exp = new DifferentialEvolution("randToBest", 1, "exp", runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution rand_1_bin = new DifferentialEvolution(MutateType.RAND, 1, CrossoverType.BIN, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution rand_1_exp = new DifferentialEvolution(MutateType.RAND, 1, CrossoverType.EXP, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution best_1_bin = new DifferentialEvolution(MutateType.BEST, 1, CrossoverType.BIN, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution best_1_exp = new DifferentialEvolution(MutateType.BEST, 1, CrossoverType.EXP, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution rand_2_bin = new DifferentialEvolution(MutateType.RAND, 2, CrossoverType.BIN, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution rand_2_exp = new DifferentialEvolution(MutateType.RAND, 2, CrossoverType.EXP, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution best_2_bin = new DifferentialEvolution(MutateType.BEST, 2, CrossoverType.BIN, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution best_2_exp = new DifferentialEvolution(MutateType.BEST, 2, CrossoverType.EXP, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution randTobest_1_bin = new DifferentialEvolution(MutateType.RANDtoBest, 1, CrossoverType.BIN, runningCount, evolutionCount, countDownLatch);
+        DifferentialEvolution randTobest_1_exp = new DifferentialEvolution(MutateType.RANDtoBest, 1, CrossoverType.EXP, runningCount, evolutionCount, countDownLatch);
 //        new Thread(rand_1_bin).start();
         pool.execute(rand_1_bin);
         pool.execute(rand_1_exp);

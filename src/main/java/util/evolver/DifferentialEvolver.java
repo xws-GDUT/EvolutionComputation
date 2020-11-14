@@ -16,15 +16,16 @@ import java.util.Random;
  * @create: 2020-11-07 23:44
  **/
 public class DifferentialEvolver extends Evolver {
+
     //进化策略
-    private String mutateType;
+    private MutateType mutateType;
     private Integer differentialVectorNo;
-    private String crossoverType;
+    private CrossoverType crossoverType;
 
     public DifferentialEvolver() {
     }
 
-    public DifferentialEvolver(String mutateType, Integer differentialVectorNo, String crossoverType) {
+    public DifferentialEvolver(MutateType mutateType, Integer differentialVectorNo, CrossoverType crossoverType) {
         this.mutateType = mutateType;
         this.differentialVectorNo = differentialVectorNo;
         this.crossoverType = crossoverType;
@@ -33,7 +34,7 @@ public class DifferentialEvolver extends Evolver {
     @Override
     public List<Individual> mutate(List<Individual> pop) {
         List<Individual> mutatedPop = new ArrayList<Individual>();
-        if("rand".equals(mutateType)) {//基于随机个体
+        if(MutateType.RAND.equals(mutateType)) {//基于随机个体
             if (differentialVectorNo == 1) {//单向量差
                 for (int i = 0; i < pop.size(); i++) {
                     Individual individual =new Individual();
@@ -80,7 +81,7 @@ public class DifferentialEvolver extends Evolver {
                 System.out.println("仅能选择单向量差或双向量差");
                 System.exit(0);
             }
-        }else if("best".equals(mutateType)){
+        }else if(MutateType.BEST.equals(mutateType)){
             Individual bestIndividual = getBestIndividual(pop);
             if (differentialVectorNo == 1) {//单向量差
                 for (int i = 0; i < pop.size(); i++) {
@@ -126,7 +127,7 @@ public class DifferentialEvolver extends Evolver {
                 System.out.println("仅能选择单向量差或双向量差");
                 System.exit(0);
             }
-        }else if("randToBest".equals(mutateType)){ //randToBest均采用单差分向量
+        }else if(MutateType.RANDtoBest.equals(mutateType)){ //randToBest均采用单差分向量
             Individual bestIndividual = getBestIndividual(pop);
             for (int i = 0; i < pop.size(); i++) {
                 Individual individual = new Individual();
@@ -178,7 +179,7 @@ public class DifferentialEvolver extends Evolver {
         if(pops.length==2){
             List<Individual> pop = pops[0];
             List<Individual> tmpPop=pops[1];
-            if("bin".equals(crossoverType)){//二项交叉
+            if(CrossoverType.BIN.equals(crossoverType)){//二项交叉
                 for(int i=0;i<tmpPop.size();i++){
                     int popisitonOfCrossover = new Random().nextInt(pop.get(0).getSolution().size());
                     Individual tmpIndividual = tmpPop.get(i);
@@ -190,7 +191,7 @@ public class DifferentialEvolver extends Evolver {
                         }
                     }
                 }
-            }else if("exp".equals(crossoverType)){//指数交叉
+            }else if(CrossoverType.EXP.equals(crossoverType)){//指数交叉
                 for(int i=0;i<tmpPop.size();i++){
                     int popisitonOfCrossover = new Random().nextInt(pop.get(0).getSolution().size());
                     Individual tmpIndividual = tmpPop.get(i);
@@ -219,11 +220,11 @@ public class DifferentialEvolver extends Evolver {
         }
     }
 
-    public String getMutateType() {
+    public MutateType getMutateType() {
         return mutateType;
     }
 
-    public void setMutateType(String mutateType) {
+    public void setMutateType(MutateType mutateType) {
         this.mutateType = mutateType;
     }
 
@@ -235,11 +236,11 @@ public class DifferentialEvolver extends Evolver {
         this.differentialVectorNo = differentialVectorNo;
     }
 
-    public String getCrossoverType() {
+    public CrossoverType getCrossoverType() {
         return crossoverType;
     }
 
-    public void setCrossoverType(String crossoverType) {
+    public void setCrossoverType(CrossoverType crossoverType) {
         this.crossoverType = crossoverType;
     }
 

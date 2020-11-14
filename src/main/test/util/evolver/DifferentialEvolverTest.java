@@ -41,7 +41,7 @@ class DifferentialEvolverTest {
             target.add(individual2);
 
             DifferentialEvolver differentialEvolver = new DifferentialEvolver();
-            differentialEvolver.setCrossoverType("bin");
+            differentialEvolver.setCrossoverType(CrossoverType.BIN);
             differentialEvolver.setRate_crossover(0);
             differentialEvolver.crossover(pop,target);
             System.out.println(target.get(0).getSolution());
