@@ -1,6 +1,16 @@
 package controller;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
 import pojo.Individual;
 import util.evaluator.Evaluator;
 import util.evaluator.EvaluatorFactory;
@@ -9,9 +19,10 @@ import util.evolver.DifferentialEvolver;
 import util.evolver.Evolver;
 import util.evolver.MutateType;
 
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.WindowFocusListener;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
@@ -63,8 +74,12 @@ public class DifferentialEvolution implements Runnable {
     public void run() {
         Thread.currentThread().setName(mutateType + "-" + differentialVectorNo + "-" + crossoverType);
         String[] function = {"f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13"};
+        StringBuilder result= new StringBuilder();
+        result.append(mutateType);
         Individual bestIndividual = null;
         try {
+
+
 
             FileUtils.write(new File("fitness/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), "函数\t" + mutateType + "/" + differentialVectorNo + "/" + crossoverType + "\n", "UTF-8");
             FileUtils.write(new File("countSuccess/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), "函数" + "\t" + mutateType + "/" + differentialVectorNo + "/" + crossoverType + "\n", "UTF-8");
@@ -138,9 +153,39 @@ public class DifferentialEvolution implements Runnable {
                     double tmp = sum_gap.get(j) / runningCount;
                     FileUtils.write(new File("gapPerGeneration/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + "/" + function[i] + ".txt"), (j + 1) + "\t" + tmp + "\n", "UTF-8", true);
                 }
+                result.append("\t" + Math.abs(avgByRunningCount));
                 FileUtils.write(new File("fitness/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), function[i] + "\t" + Math.abs(avgByRunningCount) + "\n", "UTF-8", true);
                 FileUtils.write(new File("countSuccess/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), function[i] + "\t" + successCount + "\n", "UTF-8", true);
             }
+            // 输出值excel
+            POIFSFileSystem poifsFileSystem = new POIFSFileSystem(new BufferedInputStream(new FileInputStream("result.xls")));
+            HSSFWorkbook workbook = new HSSFWorkbook(poifsFileSystem);
+            HSSFSheet sheet1 = workbook.getSheet("fitness");
+            Iterator<Row> rowIterator = sheet1.iterator();
+            short from = 0;
+            while(rowIterator.hasNext()){
+                from++;
+                rowIterator.next();
+            }
+
+            HSSFRow row = sheet1.createRow(from);
+            short lastCellNum = row.getLastCellNum();
+            String[] charArray = result.toString().split("\t");
+            for (int i = 0; i < charArray.length; i++) {
+                HSSFCell cell = row.createCell(++lastCellNum);
+                cell.setCellValue(charArray[i]);
+
+                if(i>0){
+                    if( new Double(charArray[i]) < Math.pow(10,5)) {
+                        CellStyle cellStyle = workbook.createCellStyle();
+                        Font font=workbook.createFont();
+                        font.setColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
+                        cellStyle.setFont(font);
+                        cell.setCellStyle(cellStyle);
+                    }
+                }
+            }
+            workbook.write(new BufferedOutputStream(new FileOutputStream("result.xls",false)));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -150,6 +195,8 @@ public class DifferentialEvolution implements Runnable {
 
 
     public static void main(String[] args) {
+
+
         System.out.println("设置线程池的大小：");
         Scanner scanner = new Scanner(System.in);
         int ThreadAmount = scanner.nextInt();
@@ -160,6 +207,50 @@ public class DifferentialEvolution implements Runnable {
 
         CountDownLatch countDownLatch = new CountDownLatch(10);
         long begin = System.currentTimeMillis();
+
+        POIFSFileSystem poifsFileSystem = null;
+        try {
+            poifsFileSystem = new POIFSFileSystem(new BufferedInputStream(new FileInputStream("result.xls")));
+            HSSFWorkbook workbook = new HSSFWorkbook(poifsFileSystem);
+            HSSFSheet sheet1 = workbook.createSheet("fitness");
+
+            Iterator<Row> rowIterator = sheet1.rowIterator();
+//            while(rowIterator.hasNext()){
+//                sheet1.removeRow(next);
+//            }
+
+//            while(rowIterator.hasNext()){
+//                Iterator<Cell> cellIterator = rowIterator.next().iterator();
+//                while (cellIterator.hasNext()){
+//                    Cell cell = cellIterator.next();
+//                    sheet1.
+//                }
+//            }
+
+
+
+            short from = 0;
+            HSSFRow row = sheet1.createRow(from);
+            String[] str={"进化策略","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13"};
+            short lastCellNum = row.getLastCellNum();
+            for (int i = 0; i < str.length; i++) {
+                HSSFCell cell = row.createCell(++lastCellNum);
+                cell.setCellValue(str[i]);
+            }
+            workbook.write(new BufferedOutputStream(new FileOutputStream("result.xls",false)));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (poifsFileSystem!=null){
+                try {
+                    poifsFileSystem.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
         ExecutorService pool = Executors.newFixedThreadPool(ThreadAmount);
 //      每个线程代表一种策略线程测试
