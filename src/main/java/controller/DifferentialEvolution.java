@@ -75,7 +75,7 @@ public class DifferentialEvolution implements Runnable {
         Thread.currentThread().setName(mutateType + "-" + differentialVectorNo + "-" + crossoverType);
         String[] function = {"f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13"};
         StringBuilder result= new StringBuilder();
-        result.append(mutateType);
+        result.append(mutateType + "-" + differentialVectorNo + "-" + crossoverType);
         Individual bestIndividual = null;
         try {
 
@@ -158,34 +158,38 @@ public class DifferentialEvolution implements Runnable {
                 FileUtils.write(new File("countSuccess/" + mutateType + "-" + differentialVectorNo + "-" + crossoverType + ".txt"), function[i] + "\t" + successCount + "\n", "UTF-8", true);
             }
             // 输出值excel
-            POIFSFileSystem poifsFileSystem = new POIFSFileSystem(new BufferedInputStream(new FileInputStream("result.xls")));
-            HSSFWorkbook workbook = new HSSFWorkbook(poifsFileSystem);
-            HSSFSheet sheet1 = workbook.getSheet("fitness");
-            Iterator<Row> rowIterator = sheet1.iterator();
+            File file = new File("result.xls");
+            FileInputStream fileInputStream = FileUtils.openInputStream(file);
+            HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+            HSSFSheet sheet = workbook.getSheet("fitness");
+            Iterator<Row> iterator = sheet.iterator();
             short from = 0;
-            while(rowIterator.hasNext()){
+            while(iterator.hasNext()){
                 from++;
-                rowIterator.next();
+                Iterator<Cell> iterator1 = iterator.next().iterator();
+                while (iterator1.hasNext()){
+                    System.out.print(iterator1.next().getStringCellValue());
+                }
             }
-
-            HSSFRow row = sheet1.createRow(from);
-            short lastCellNum = row.getLastCellNum();
+            HSSFRow row = sheet.createRow(from);
             String[] charArray = result.toString().split("\t");
+            short lastCellNum = row.getLastCellNum();
             for (int i = 0; i < charArray.length; i++) {
                 HSSFCell cell = row.createCell(++lastCellNum);
                 cell.setCellValue(charArray[i]);
 
-                if(i>0){
-                    if( new Double(charArray[i]) < Math.pow(10,5)) {
+                if(i>0) {
+                    if (new Double(charArray[i]) < Math.pow(10, -2)) {
                         CellStyle cellStyle = workbook.createCellStyle();
-                        Font font=workbook.createFont();
+                        Font font = workbook.createFont();
                         font.setColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
                         cellStyle.setFont(font);
                         cell.setCellStyle(cellStyle);
                     }
                 }
             }
-            workbook.write(new BufferedOutputStream(new FileOutputStream("result.xls",false)));
+            FileOutputStream fileOutputStream = FileUtils.openOutputStream(file);
+            workbook.write(fileOutputStream);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -208,27 +212,13 @@ public class DifferentialEvolution implements Runnable {
         CountDownLatch countDownLatch = new CountDownLatch(10);
         long begin = System.currentTimeMillis();
 
-        POIFSFileSystem poifsFileSystem = null;
+
+        FileOutputStream fileOutputStream= null;
         try {
-            poifsFileSystem = new POIFSFileSystem(new BufferedInputStream(new FileInputStream("result.xls")));
-            HSSFWorkbook workbook = new HSSFWorkbook(poifsFileSystem);
+            File file = new File("result.xls");
+            fileOutputStream = FileUtils.openOutputStream(file);
+            HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet1 = workbook.createSheet("fitness");
-
-            Iterator<Row> rowIterator = sheet1.rowIterator();
-//            while(rowIterator.hasNext()){
-//                sheet1.removeRow(next);
-//            }
-
-//            while(rowIterator.hasNext()){
-//                Iterator<Cell> cellIterator = rowIterator.next().iterator();
-//                while (cellIterator.hasNext()){
-//                    Cell cell = cellIterator.next();
-//                    sheet1.
-//                }
-//            }
-
-
-
             short from = 0;
             HSSFRow row = sheet1.createRow(from);
             String[] str={"进化策略","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13"};
@@ -237,14 +227,15 @@ public class DifferentialEvolution implements Runnable {
                 HSSFCell cell = row.createCell(++lastCellNum);
                 cell.setCellValue(str[i]);
             }
-            workbook.write(new BufferedOutputStream(new FileOutputStream("result.xls",false)));
+            workbook.write(fileOutputStream);
+            fileOutputStream.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
-            if (poifsFileSystem!=null){
+            if (fileOutputStream!=null){
                 try {
-                    poifsFileSystem.close();
+                    fileOutputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
